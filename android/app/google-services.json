@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "184856215075",
+    "firebase_url": "https://antifraud-46318.firebaseio.com",
+    "project_id": "antifraud-46318",
+    "storage_bucket": "antifraud-46318.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184856215075:android:41079464ddaa5dd8cdfb96",
+        "android_client_info": {
+          "package_name": "com.cyber.AntiFraud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184856215075-f4s06um8qq7d0kfv2mn5c9aesorfdaul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8UyKWtBTdIzV3prPwVMi97z2e4Gwibzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184856215075-f4s06um8qq7d0kfv2mn5c9aesorfdaul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
