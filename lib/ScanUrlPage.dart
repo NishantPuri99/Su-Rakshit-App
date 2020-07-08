@@ -22,7 +22,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   File pickedImage;
-  var text = '';
+  String text = '';
   String url;
   bool scanned = false;
   var Data;
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             text = line.text + ' ';
             url = 'https://virus-total-flask.herokuapp.com/' +
-                line.text.toString().toLowerCase();
+                text.toString().toLowerCase();
             scanned = true;
             //Virus Total API, we add it here API(line.text)
             //ML Model(line.text),
@@ -126,7 +126,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text("Scan"),
                   onPressed: () async {
                     Data = await Getdata(url);
+                    print(Data);
                     var DecodedData = jsonDecode(Data);
+                    print(DecodedData);
                     setState(() {
                       QueryText = DecodedData['Query'];
                     });
