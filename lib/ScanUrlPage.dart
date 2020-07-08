@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
+import 'api.dart';
+import 'dart:convert';
 
 class ScanUrlPage extends StatelessWidget {
   @override
@@ -21,6 +23,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   File pickedImage;
   var text = '';
+  String url;
+  bool scanned = false;
+  var Data;
+
+  String QueryText = 'Your Url Status will be displayed here';
 
   bool imageLoaded = false;
 
@@ -50,6 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
           print("I FOUND THE STRING");
           setState(() {
             text = line.text + ' ';
+            url = 'https://virus-total-flask.herokuapp.com/' +
+                line.text.toString().toLowerCase();
+            scanned = true;
             //Virus Total API, we add it here API(line.text)
             //ML Model(line.text),
           });
@@ -65,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          SizedBox(height: 100.0),
+          SizedBox(height: 50.0),
           imageLoaded
               ? Center(
                   child: Container(
@@ -76,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                  height: 250,
+                  height: 150,
                   child: Image.file(
                     pickedImage,
                     fit: BoxFit.cover,
@@ -98,19 +108,38 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           SizedBox(height: 10.0),
-          SizedBox(height: 10.0),
           text == ''
               ? Text('Text will display here')
               : Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: Text(
                         text,
                       ),
                     ),
                   ),
                 ),
+          Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: RaisedButton(
+                  child: Text("Scan"),
+                  onPressed: () async {
+                    Data = await Getdata(url);
+                    var DecodedData = jsonDecode(Data);
+                    setState(() {
+                      QueryText = DecodedData['Query'];
+                    });
+                  })),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              (scanned == true)
+                  ? QueryText
+                  : "Your Url Status will be displayed here",
+              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
       ),
     );

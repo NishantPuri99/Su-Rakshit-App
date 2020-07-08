@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'api.dart';
+import 'dart:convert';
 
 class PasteUrlPage extends StatelessWidget {
   @override
@@ -17,30 +19,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String text = "";
-  final myController = TextEditingController();
-  void changeName(String TE) {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      if (TE == "") {
-        text = "The Url Status Will Be Displayed Here";
-      } else {
-        text = TE;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    myController.dispose();
-    super.dispose();
-  }
-
+  String url;
+  bool scanned = false;
+  var Data;
+  String QueryText = 'Query';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,32 +33,36 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Text('Enter or Paste the URL in the field below'),
           SizedBox(height: 5.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 200.0,
-                child: TextField(
-                  controller: myController,
-                  decoration: new InputDecoration(hintText: "Type Here"),
-                  onChanged: (String str) {
-                    text = str;
-                  },
-                  onSubmitted: (String str) {
-                    text = str;
-                  },
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  changeName(text);
-                },
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              onChanged: (value) {
+                url = 'https://virus-total-flask.herokuapp.com/' +
+                    value.toString();
+                scanned = true;
+              },
+              decoration: InputDecoration(
+                  hintText: 'Search Anything Here',
+                  suffixIcon: GestureDetector(
+                      onTap: () async {
+                        Data = await Getdata(url);
+                        var DecodedData = jsonDecode(Data);
+                        setState(() {
+                          QueryText = DecodedData['Query'];
+                        });
+                      },
+                      child: Icon(Icons.search))),
+            ),
           ),
-          Text(text == "" ? "" : '$text is OK'),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              (scanned == true)
+                  ? QueryText
+                  : "Your Url Status will be displayed here",
+              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
       ),
     );
