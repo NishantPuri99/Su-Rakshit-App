@@ -70,21 +70,28 @@ class _MyHomePageState extends State<MyHomePage> {
     textRecognizer.close();
   }
 
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Scan URL",
+          style: TextStyle(fontSize: 40),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blueGrey,
+      ),
+      backgroundColor: hexToColor("#262626"),
       body: Column(
         children: <Widget>[
           SizedBox(height: 50.0),
           imageLoaded
               ? Center(
                   child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(blurRadius: 20),
-                    ],
-                  ),
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
                   height: 150,
                   child: Image.file(
@@ -92,54 +99,109 @@ class _MyHomePageState extends State<MyHomePage> {
                     fit: BoxFit.cover,
                   ),
                 ))
-              : Container(),
+              : Center(
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                    height: 200,
+                    width: 200,
+                    child: Image.asset('assets/img.gif'),
+                  ),
+                ),
           SizedBox(height: 10.0),
-          Center(
-            child: FlatButton.icon(
-              icon: Icon(
-                Icons.photo_camera,
-                size: 100,
-              ),
-              label: Text(''),
-              textColor: Theme.of(context).primaryColor,
+          Container(
+            height: 50.0,
+            child: RaisedButton(
               onPressed: () async {
                 pickImage();
               },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(80.0)),
+              padding: EdgeInsets.all(0.0),
+              child: Ink(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xff374ABE), Color(0xff64B6FF)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(30.0)),
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Click here to take a picture of URL",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          new Padding(padding: EdgeInsets.only(top: 10.0)),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.blue,
+                border: Border.all(
+                  color: Colors.blue,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            // color: Colors.blue,
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(10),
+            child: Text(
+              text == '' ? 'Your URL will display here' : text,
+              style: new TextStyle(
+                  color: Colors.amber,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
             ),
           ),
           SizedBox(height: 10.0),
-          text == ''
-              ? Text('Text will display here')
-              : Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        text,
-                      ),
+          Container(
+            height: 50.0,
+            child: RaisedButton(
+              onPressed: () async {
+                Data = await Getdata(url);
+                print(Data);
+                var DecodedData = jsonDecode(Data);
+                print(DecodedData);
+                setState(() {
+                  QueryText = DecodedData['Query'];
+                });
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(80.0)),
+              padding: EdgeInsets.all(0.0),
+              child: Ink(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xff374ABE), Color(0xff64B6FF)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
+                    borderRadius: BorderRadius.circular(30.0)),
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 100.0, minHeight: 50.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Scan URL",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 ),
-          Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: RaisedButton(
-                  child: Text("Scan"),
-                  onPressed: () async {
-                    Data = await Getdata(url);
-                    print(Data);
-                    var DecodedData = jsonDecode(Data);
-                    print(DecodedData);
-                    setState(() {
-                      QueryText = DecodedData['Query'];
-                    });
-                  })),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
             child: Text(
               (scanned == true)
                   ? QueryText
                   : "Your Url Status will be displayed here",
-              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueGrey),
             ),
           ),
         ],
